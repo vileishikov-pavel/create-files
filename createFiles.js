@@ -6,11 +6,10 @@ const filesCount = args.count || 100;
 const foldersCount = args.folders_count || 1;
 const contentLength = args.content_length || 50000;
 
-let now;
 const path = `E:/temp/${folder}`;
 
 function* createFiles(subFolder) {
-    const subFolderPath = subFolder !== undefined ? '/' + subFolder : '';
+    const subFolderPath = subFolder !== undefined ? `/${subFolder}` : '';
     const fullFolderPath = `${path}${subFolderPath}`;
 
     if (subFolder !== undefined) {
@@ -35,6 +34,8 @@ function* createFolders() {
 }
 
 function execute(generator) {
+    const now = new Date().getTime();
+
     return new Promise((resolve, reject) => {
         const _execute = function(result) {
             const next = generator.next();
@@ -71,8 +72,6 @@ function _generateContent(charsCount) {
 
 (function() {
     _createFolderIfRequired(path);
-
-    now = new Date().getTime();
 
     if (foldersCount > 1) {
         execute(createFolders());
