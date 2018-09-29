@@ -30,21 +30,27 @@ function* createFiles(subFolder) {
 
 function* createFolders() {
     for (let i = 0; i < foldersCount; i++) {
-        yield Promise.all([...createFiles(i)]);
+        yield execute(createFiles(i));
     }
 }
 
-function execute(generator, result) {
-    const next = generator.next();
-
-    if (!next.done) {
-        next.value.then(
-            (result) => execute(generator, result), 
-            (err) => generator.throw(err)
-        );
-    } else {
-        console.log(`Done! It takes ${(new Date().getTime() - now) / 1000} seconds.`);
-    }
+function execute(generator) {
+    return new Promise((resolve, reject) => {
+        const _execute = function(result) {
+            const next = generator.next();
+    
+            if (!next.done) {
+                next.value.then(
+                    (result) => _execute(result), 
+                    (err) => generator.throw(err)
+                );
+            } else {
+                console.log(`Done! It takes ${(new Date().getTime() - now) / 1000} seconds.`);
+                resolve();
+            }
+        }
+        _execute();
+    });
 }
 
 function _createFolderIfRequired(p) {
