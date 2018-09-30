@@ -33,7 +33,7 @@ function* createFolders() {
     }
 }
 
-function execute(generator) {
+function execute(generator, isGeneral) {
     const now = new Date().getTime();
 
     return new Promise((resolve, reject) => {
@@ -46,7 +46,16 @@ function execute(generator) {
                     (err) => generator.throw(err)
                 );
             } else {
-                console.log(`Done! It takes ${(new Date().getTime() - now) / 1000} seconds.`);
+                if (isGeneral) {
+                    console.log(`
+***************************************
+Summary time: ${(new Date().getTime() - now) / 1000} seconds.
+***************************************
+                    `);
+                } else {
+                    console.log(`Done! It takes ${(new Date().getTime() - now) / 1000} seconds.`);
+                }
+                
                 resolve();
             }
         }
@@ -74,8 +83,8 @@ function _generateContent(charsCount) {
     _createFolderIfRequired(path);
 
     if (foldersCount > 1) {
-        execute(createFolders());
+        execute(createFolders(), true);
     } else {
-        execute(createFiles());
+        execute(createFiles(), true);
     }    
 })();
