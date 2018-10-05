@@ -2,11 +2,12 @@ const fs = require('fs');
 const args = require('minimist')(process.argv.slice(2));
 
 const folder = args.folder || 'test1';
+const agent = args.agent || 'build';
 const filesCount = args.count || 100;
 const foldersCount = args.folders_count || 1;
 const contentLength = args.content_length || 50000;
 
-const path = `E:/temp/${folder}`;
+const path = `D:/temp/agent/${agent}/management_storage/${folder}`;
 
 function* createFiles(subFolder) {
     const subFolderPath = subFolder !== undefined ? `/${subFolder}` : '';
@@ -39,10 +40,10 @@ function execute(generator, isGeneral) {
     return new Promise((resolve, reject) => {
         const _execute = function(result) {
             const next = generator.next();
-    
+
             if (!next.done) {
                 next.value.then(
-                    (result) => _execute(result), 
+                    (result) => _execute(result),
                     (err) => generator.throw(err)
                 );
             } else {
@@ -55,7 +56,7 @@ Summary time: ${(new Date().getTime() - now) / 1000} seconds.
                 } else {
                     console.log(`Done! It takes ${(new Date().getTime() - now) / 1000} seconds.`);
                 }
-                
+
                 resolve();
             }
         }
@@ -72,10 +73,10 @@ function _createFolderIfRequired(p) {
 function _generateContent(charsCount) {
     var text = "";
     var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-  
+
     for (var i = 0; i < charsCount; i++)
       text += possible.charAt(Math.floor(Math.random() * possible.length));
-  
+
     return text;
 }
 
@@ -86,5 +87,5 @@ function _generateContent(charsCount) {
         execute(createFolders(), true);
     } else {
         execute(createFiles(), true);
-    }    
+    }
 })();
