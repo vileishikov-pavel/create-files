@@ -2,11 +2,13 @@
 
 ### Params
 
+```
 --path - specify path to your folder on storage
 --folder - folder name which we created
 --count - files count on each sub folder (if we haven't sub folders, it will create files at root) (defauld - 100)
 --folders_count - count of sub folders (default - 0)
 --content_length - generated content length per each file
+```
 
 ```--path``` and ```--folder``` params are required.
 
