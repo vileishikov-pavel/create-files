@@ -1,12 +1,18 @@
 const fs = require('fs');
 const args = require('minimist')(process.argv.slice(2));
 
-const folder = args.folder || 'test1';
+let path = args.path;
+const folder = args.folder;
 const filesCount = args.count || 100;
-const foldersCount = args.folders_count || 1;
-const contentLength = args.content_length || 50000;
+const foldersCount = args.folders_count || 0;
+const fileContent = _generateContent(args.content_length || 50000);
 
-const path = `E:/temp/${folder}`;
+path = `${path}/${folder}`;
+
+if (!path || !folder) {
+    console.error('You must specify --path and --folder_name options!');
+    process.exit(1);
+}
 
 function* createFiles(subFolder) {
     const subFolderPath = subFolder !== undefined ? `/${subFolder}` : '';
@@ -18,7 +24,7 @@ function* createFiles(subFolder) {
 
     for (let i = 0; i < filesCount; i++) {
         yield new Promise((resolve, reject) => {
-            fs.writeFile(`${fullFolderPath}/message${_generateContent(15)}.txt`, _generateContent(contentLength), (err) => {
+            fs.writeFile(`${fullFolderPath}/message${_generateContent(15)}.txt`, fileContent, (err) => {
                 if (err) { reject(err) };
 
                 resolve();
@@ -82,7 +88,7 @@ function _generateContent(charsCount) {
 (function() {
     _createFolderIfRequired(path);
 
-    if (foldersCount > 1) {
+    if (foldersCount > 0) {
         execute(createFolders(), true);
     } else {
         execute(createFiles(), true);
